@@ -1,47 +1,16 @@
-import os
-import pandas as pd
+from collections.abc import Mapping
+from operator import itemgetter
+
 import numpy as np
+import pandas as pd
+import unidecode
+
+NULL = frozenset([np.nan, pd.NA, None])
 
 
-def get_exts(fname):
-    root, ext = os.path.splitext(fname)
-    if os.path.splitext(root)[1]:
-        return get_exts(root) + [ext]
-    else:
-        return [ext]
-
-
-def nan_info(data: pd.DataFrame):
-    df = data.isna().sum().to_frame("Total")
-    df["Percent"] = (df["Total"] / data.shape[0]) * 100
-    return df.sort_values("Total", ascending=False)
-
-
-def nan_rows(data: pd.DataFrame):
-    return data[data.isna().any(axis=1)]
-
-
-def who_is_nan(data: pd.DataFrame, col: str, name_col: str):
-    return nan_rows(data)[data[col].isna()][name_col]
-
-
-def print_categorical_uniques(data: pd.DataFrame, cut=50, skip=None):
-    cat_cols = (data.dtypes == "object") & (data.nunique() <= cut)
-    cat_cols = data.columns[cat_cols]
-    if skip:
-        cat_cols = [x for x in cat_cols if x not in skip]
-    for col in cat_cols:
-        print(col)
-        print("-" * len(col))
-        print(data[col].unique())
-        print("\n")
-
-
-def show_numerical_value_counts(data: pd.DataFrame):
-    is_numeric = data.dtypes.map(pd.api.types.is_numeric_dtype)
-    num_only = data[data.columns[is_numeric]]
-    for col in num_only.columns:
-        display(num_only[col].value_counts().head())
+def numeric_cols(data: pd.DataFrame) -> list:
+    numeric = data.dtypes.map(pd.api.types.is_numeric_dtype)
+    return data.columns[numeric].to_list()
 
 
 def counter_index(data):
@@ -52,9 +21,45 @@ def counter_index(data):
     return index
 
 
+def normalize_list_likes(data):
+    if not isinstance(data, pd.Series):
+        raise TypeError("`data` must be pd.Series")
+    list_like = data.map(pd.api.types.is_list_like)
+    size = data.map(len, na_action="ignore").max()
+    filler = [np.nan] * size
+    extended = data.copy()
+    extended[~list_like] = extended.loc[~list_like].map(lambda x: [x])
+    extended = extended.map(lambda x: (list(x) + filler)[:size])
+    return extended
+
+
+def map_list_likes(data, column, mapper):
+    def transform(list_):
+        if isinstance(mapper, Mapping):
+            return [mapper[x] if x not in NULL else x for x in list_]
+        else:
+            return [mapper(x) if x not in NULL else x for x in list_]
+
+    df = data.copy()
+    df[column] = df.loc[:, column].map(transform, na_action="ignore")
+    return df
+
+
 def explode_wide(data, column):
-    expl = data[column].explode()
-    expl.index = counter_index(expl)
-    expl = expl.unstack(0)
-    expl.columns = expl.columns.map(lambda x: f"{column}_{x+1}")
-    return pd.concat([data, expl], axis=1).drop(column, axis=1)
+    df = data.copy()
+    n_cols = df[column].map(len).max()
+    extended = normalize_list_likes(df[column])
+    insert_after = df.columns.get_loc(column) + 1
+    for i in range(n_cols):
+        new_col = df[column].map(itemgetter(i))
+        df.insert(insert_after + i, f"{column}_{i}", new_col)
+    return df.drop(columns=column)
+
+
+def triangle_mask(data: pd.DataFrame, upper=True):
+    base = np.ones_like(data.values, dtype=np.bool_)
+    if upper:
+        mask = np.triu(base, k=1)
+    else:
+        mask = np.tril(base, k=-1)
+    return mask
