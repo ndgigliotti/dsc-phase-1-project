@@ -57,6 +57,7 @@ def explode_wide(data, column):
 
 
 def triangle_mask(data: pd.DataFrame, upper=True):
+    """pandas cookbook"""
     base = np.ones_like(data.values, dtype=np.bool_)
     if upper:
         mask = np.triu(base, k=1)
