@@ -19,14 +19,11 @@ def expl_combo_table(data, column):
     return cat_combos.apply(lambda x: x.astype(np.bool_))
 
 
-def combo_table(source, index_col, columns_col):
-    combos = pd.DataFrame(index=source.tconst.unique(), columns=source.nconst.unique())
-    mapping = source.set_index(index_col)[columns_col]
-    for index, row in combos.iterrows():
-        cats_at_index = mapping[index]
-        if isinstance(cats_at_index, pd.Series):
-            cats_at_index = mapping[index].values
-            combos.loc[index] = row.index.isin(cats_at_index)
-        else:
-            combos.loc[index] = row.index == cats_at_index
+def combo_table(source, x_col, y_col):
+    index = source[x_col].unique()
+    columns = source[y_col].unique()
+    combos = pd.DataFrame(data=0, index=index, columns=columns)
+    x2y = source.set_index(x_col)[y_col]
+    for x, y in x2y.items():
+        combos.loc[x, y] = 1
     return combos.astype(np.bool_)
