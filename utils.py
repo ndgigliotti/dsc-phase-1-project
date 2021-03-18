@@ -33,16 +33,14 @@ def normalize_list_likes(data):
     return extended
 
 
-def map_list_likes(data, column, mapper):
+def map_list_likes(data: pd.Series, mapper: dict):
     def transform(list_):
         if isinstance(mapper, Mapping):
             return [mapper[x] if x not in NULL else x for x in list_]
         else:
             return [mapper(x) if x not in NULL else x for x in list_]
 
-    df = data.copy()
-    df[column] = df.loc[:, column].map(transform, na_action="ignore")
-    return df
+    return data.map(transform, na_action="ignore")
 
 
 def explode_wide(data, column):
