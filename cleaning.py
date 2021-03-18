@@ -15,6 +15,12 @@ def nan_info(data: pd.DataFrame):
     return df.sort_values("Total", ascending=False)
 
 
+def dup_info(data: pd.DataFrame):
+    df = data.duplicated().sum().to_frame("Total")
+    df["Percent"] = (df["Total"] / data.shape[0]) * 100
+    return df.sort_values("Total", ascending=False)
+
+
 def nan_rows(data: pd.DataFrame):
     return data[data.isna().any(axis=1)]
 
@@ -72,8 +78,28 @@ def find_outliers(data: pd.Series) -> pd.Series:
     return (data < min_cut) | (data > max_cut)
 
 
+def clip_outliers(data: pd.Series):
+    outliers = find_outliers(data)
+    inliers = data.loc[~outliers]
+    bounds = inliers.agg(["min", "max"])
+    return data.clip(lower=bounds["min"], upper=bounds["max"])
+
+
 def outlier_info(data: pd.DataFrame) -> pd.DataFrame:
     df = data[utils.numeric_cols(data)]
     df = df.apply(find_outliers).sum().to_frame("Total")
     df["Percent"] = (df["Total"] / data.shape[0]) * 100
     return df.sort_values("Total", ascending=False)
+
+
+def info(data: pd.DataFrame) -> pd.DataFrame:
+    n_rows = data.shape[0]
+    nan = data.isna().sum().to_frame("nan")
+    dup = data.apply(lambda x: x.duplicated()).sum().to_frame("dup")
+    out = data[utils.numeric_cols(data)]
+    out = out.apply(find_outliers).sum().to_frame('out')
+    info = pd.concat([nan, dup, out], axis=1)
+    pcts = (info / n_rows) * 100
+    pcts.columns = pcts.columns.map(lambda x: f'{x}_%')
+    info = pd.concat([info, pcts], axis=1)
+    return info.sort_index(axis=1).sort_values('nan', ascending=False)
