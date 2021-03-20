@@ -5,6 +5,19 @@ import seaborn as sns
 import utils
 
 
+def multi_hist(data, include=None, xlabel=None, bins="auto", figsize=(15, 5)):
+    if not include:
+        include = utils.numeric_cols(data)
+    fig, axes = plt.subplots(ncols=len(include), figsize=figsize)
+    for col, ax in zip(include, axes.flat):
+        ax = sns.histplot(data=data, x=col, bins=bins, ax=ax)
+        ax.set_title(f"Distribution of `{col}`")
+        if xlabel:
+            ax.set_xlabel(xlabel)
+    fig.tight_layout()
+    return axes
+
+
 def heated_barplot(series, title, xlabel, ylabel, desat=0.6, ax=None, figsize=(8, 10)):
     if not ax:
         fig, ax = plt.subplots(figsize=figsize)
@@ -65,11 +78,7 @@ def boolean_violinplots(
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i, ax in enumerate(axes.flat):
         ax = sns.violinplot(
-            x=crosstab.iloc[:, i],
-            y=y_series,
-            size=size,
-            ax=ax,
-            palette="muted"
+            x=crosstab.iloc[:, i], y=y_series, size=size, ax=ax, palette="muted"
         )
         if xlabels:
             ax.set_xlabel(xlabel[i])
