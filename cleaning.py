@@ -3,6 +3,7 @@ import json
 import unidecode
 from string import punctuation
 import pandas as pd
+import numpy as np
 import utils
 
 RE_PUNCT = re.compile(f"[{re.escape(punctuation)}]")
@@ -96,9 +97,7 @@ def info(data: pd.DataFrame) -> pd.DataFrame:
     n_rows = data.shape[0]
     nan = data.isna().sum().to_frame("nan")
     dup = data.apply(lambda x: x.duplicated()).sum().to_frame("dup")
-    out = data[utils.numeric_cols(data)]
-    out = out.apply(find_outliers).sum().to_frame("out")
-    info = pd.concat([nan, dup, out], axis=1)
+    info = pd.concat([nan, dup], axis=1)
     pcts = (info / n_rows) * 100
     pcts.columns = pcts.columns.map(lambda x: f"{x}_%")
     info = pd.concat([info, pcts], axis=1)
