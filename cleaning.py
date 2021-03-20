@@ -97,9 +97,9 @@ def info(data: pd.DataFrame) -> pd.DataFrame:
     nan = data.isna().sum().to_frame("nan")
     dup = data.apply(lambda x: x.duplicated()).sum().to_frame("dup")
     out = data[utils.numeric_cols(data)]
-    out = out.apply(find_outliers).sum().to_frame('out')
+    out = out.apply(find_outliers).sum().to_frame("out")
     info = pd.concat([nan, dup, out], axis=1)
     pcts = (info / n_rows) * 100
-    pcts.columns = pcts.columns.map(lambda x: f'{x}_%')
+    pcts.columns = pcts.columns.map(lambda x: f"{x}_%")
     info = pd.concat([info, pcts], axis=1)
-    return info.sort_index(axis=1).sort_values('nan', ascending=False)
+    return info.sort_index(axis=1).sort_values("nan", ascending=False)
