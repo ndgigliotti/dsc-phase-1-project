@@ -62,7 +62,7 @@ def boolean_violinplots(
         crosstab = crosstab.loc[:, include]
         nrows = int(np.ceil(len(include) / 2))
     crosstab = crosstab.astype(np.bool_)
-
+    corr = crosstab.corrwith(y_series)
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i, ax in enumerate(axes.flat):
         ax = sns.violinplot(
@@ -77,6 +77,17 @@ def boolean_violinplots(
             ax.set_xlabel(xlabel[i])
         if ylabel:
             ax.set_ylabel(ylabel)
+        cat_corr = np.round(corr.iloc[i], 2)
+        text = f"Corr: {cat_corr}"
+        ax.text(
+            0.975,
+            1.025,
+            text,
+            horizontalalignment="right",
+            verticalalignment="center",
+            transform=ax.transAxes,
+            fontsize=12,
+        )
     fig.suptitle(suptitle)
     fig.tight_layout()
     return axes
