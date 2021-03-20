@@ -61,7 +61,6 @@ def boolean_violinplots(
     if include:
         crosstab = crosstab.loc[:, include]
         nrows = int(np.ceil(len(include) / 2))
-    crosstab = crosstab.astype(np.bool_)
     corr = crosstab.corrwith(y_series)
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i, ax in enumerate(axes.flat):
