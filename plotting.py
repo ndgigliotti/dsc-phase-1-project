@@ -70,8 +70,7 @@ def boolean_violinplots(
             y=y_series,
             size=size,
             ax=ax,
-            palette="muted",
-            split=True,
+            palette="muted"
         )
         if xlabels:
             ax.set_xlabel(xlabel[i])
