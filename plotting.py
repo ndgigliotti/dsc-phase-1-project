@@ -66,6 +66,7 @@ def boolean_violinplots(
     xlabels=None,
     ylabel=None,
     include=None,
+    palette='deep',
     size=1,
     figsize=(12, 8),
 ):
@@ -78,7 +79,7 @@ def boolean_violinplots(
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i, ax in enumerate(axes.flat):
         ax = sns.violinplot(
-            x=crosstab.iloc[:, i], y=y_series, size=size, ax=ax, palette="muted"
+            x=crosstab.iloc[:, i], y=y_series, size=size, ax=ax, palette=palette
         )
         if xlabels:
             ax.set_xlabel(xlabel[i])
