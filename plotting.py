@@ -5,12 +5,12 @@ import seaborn as sns
 import utils
 
 
-def multi_hist(data, include=None, xlabel=None, bins="auto", figsize=(15, 5)):
+def multi_hist(data, include=None, xlabel=None, bins="auto", figsize=(15, 5), **kwargs):
     if not include:
         include = utils.numeric_cols(data)
     fig, axes = plt.subplots(ncols=len(include), figsize=figsize)
     for col, ax in zip(include, axes.flat):
-        ax = sns.histplot(data=data, x=col, bins=bins, ax=ax)
+        ax = sns.histplot(data=data, x=col, bins=bins, ax=ax, **kwargs)
         ax.set_title(f"Distribution of `{col}`")
         if xlabel:
             ax.set_xlabel(xlabel)

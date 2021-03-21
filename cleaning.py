@@ -86,13 +86,6 @@ def clip_outliers(data: pd.Series):
     return data.clip(lower=bounds["min"], upper=bounds["max"])
 
 
-def outlier_info(data: pd.DataFrame) -> pd.DataFrame:
-    df = data[utils.numeric_cols(data)]
-    df = df.apply(find_outliers).sum().to_frame("Total")
-    df["Percent"] = (df["Total"] / data.shape[0]) * 100
-    return df.sort_values("Total", ascending=False)
-
-
 def info(data: pd.DataFrame) -> pd.DataFrame:
     n_rows = data.shape[0]
     nan = data.isna().sum().to_frame("nan")
