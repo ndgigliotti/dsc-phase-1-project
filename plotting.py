@@ -17,6 +17,11 @@ def multi_hist(data, include=None, xlabel=None, bins="auto", figsize=(15, 5)):
     fig.tight_layout()
     return axes
 
+def topn_ranking(data, label, rankby, topn, palette='deep', figsize=(5, 8)):
+    fig, ax = plt.subplots(figsize=figsize)
+    rank_df = data.sort_values(rankby, ascending=False).head(topn)
+    ax = sns.barplot(data=rank_df, x=rankby, y=label, palette=palette, ax=ax)
+    return ax
 
 def heated_barplot(series, title, xlabel, ylabel, desat=0.6, ax=None, figsize=(8, 10)):
     if not ax:
