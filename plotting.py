@@ -17,13 +17,13 @@ def multi_hist(data, include=None, xlabel=None, bins="auto", figsize=(15, 5), **
     fig.tight_layout()
     return axes
 
-def topn_ranking(data, label, rankby, topn, palette='deep', figsize=(5, 8)):
+def topn_ranking(data, name, rankby, topn, figsize=(5, 8), **kwargs):
     fig, ax = plt.subplots(figsize=figsize)
     rank_df = data.sort_values(rankby, ascending=False).head(topn)
-    ax = sns.barplot(data=rank_df, x=rankby, y=label, palette=palette, ax=ax)
+    ax = sns.barplot(data=rank_df, x=rankby, y=name, ax=ax, **kwargs)
     return ax
 
-def heated_barplot(series, title, xlabel, ylabel, desat=0.6, ax=None, figsize=(8, 10)):
+def heated_barplot(series, desat=0.6, ax=None, figsize=(8, 10)):
     if not ax:
         fig, ax = plt.subplots(figsize=figsize)
     series.sort_values(ascending=False, inplace=True)
@@ -34,16 +34,13 @@ def heated_barplot(series, title, xlabel, ylabel, desat=0.6, ax=None, figsize=(8
         x=series.values, y=series.index, palette=palette, orient="h", ec="gray", ax=ax
     )
     ax.axvline(0.0, color="gray", lw=1, ls="-")
-    ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
     return ax
 
 
-def cat_correlation(crosstab, other, title, ylabel, **kwargs):
+def cat_correlation(crosstab, other, **kwargs):
     corr = crosstab.corrwith(other).dropna().sort_values(ascending=False)
-    xlabel = "Correlation"
-    ax = heated_barplot(corr, title, xlabel, ylabel, **kwargs)
+    ax = heated_barplot(corr, **kwargs)
+    ax.set_xlabel("Correlation")
     return ax
 
 
@@ -53,12 +50,13 @@ def cat_corr_by_bins(corr, bin1, bin2, interval1, interval2, suptitle, **kwargs)
     intervals = [interval1, interval2]
     for bin_, interval, ax in zip(bins, intervals, axes.flat):
         data = corr.loc[bin_].dropna().sort_values(ascending=False)
+        ax = heated_barplot(data, ax=ax, **kwargs)
         left = utils.prettify_number(interval.left)
         right = utils.prettify_number(interval.right)
-        title = f"{bin_}\n\${left} to \${right}"
-        xlabel = "Correlation"
-        ylabel = "Genre"
-        ax = heated_barplot(data, title, xlabel, ylabel, ax=ax, **kwargs)
+        ax.set_title(f"{bin_}\n\${left} to \${right}")
+        ax.set_xlabel("Correlation")
+        ax.set_ylabel(None)
+        
     fig.suptitle(suptitle, fontsize=16)
     fig.tight_layout()
     return axes
