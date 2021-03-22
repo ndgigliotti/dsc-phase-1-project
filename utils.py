@@ -62,7 +62,3 @@ def triangle_mask(data: pd.DataFrame, upper=True):
     else:
         mask = np.tril(base, k=-1)
     return mask
-
-def prettify_number(num):
-    num = int(round(num))
-    return f'{num:,}'
