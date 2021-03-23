@@ -30,23 +30,6 @@ def who_is_nan(data: pd.DataFrame, col: str, name_col: str):
     return nan_rows(data)[data[col].isna()][name_col]
 
 
-def print_categorical_uniques(data: pd.DataFrame, cut=50, skip=None):
-    cat_cols = (data.dtypes == "object") & (data.nunique() <= cut)
-    cat_cols = data.columns[cat_cols]
-    if skip:
-        cat_cols = [x for x in cat_cols if x not in skip]
-    for col in cat_cols:
-        print(col)
-        print("-" * len(col))
-        print(data[col].unique())
-        print("\n")
-
-
-def show_numerical_value_counts(data: pd.DataFrame):
-    for col in utils.numeric_cols(data):
-        display(data[col].value_counts().head())
-
-
 def process_strings(strings: pd.Series) -> pd.Series:
     df = strings.str.lower()
     df = df.str.replace(RE_PUNCT, "").str.replace(RE_WHITESPACE, " ")
