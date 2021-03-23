@@ -217,7 +217,7 @@ def boolean_violinplots(
         nrows = int(np.ceil(len(include) / 2))
     corr = crosstab.corrwith(y_series)
     fig, axs = plt.subplots(
-        nrows=nrows, ncols=ncols, sharex=True, figsize=figsize
+        nrows=nrows, ncols=ncols, sharey=True, figsize=figsize
     )
     for i, ax in enumerate(axs.flat):
         ax = sns.violinplot(x=crosstab.iloc[:, i], y=y_series, ax=ax, **kwargs)
