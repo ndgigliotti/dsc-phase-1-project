@@ -169,7 +169,7 @@ def cat_corr_by_bins(
     Returns:
         np.array: Array of Axes.
     """
-    fig, axs = plt.subplots(ncols=2, figsize=(15, 10))
+    fig, axs = plt.subplots(ncols=2, sharex=True, figsize=(15, 10))
     bins = [bin1, bin2]
     intervals = [interval1, interval2]
     for bin_, interval, ax in zip(bins, intervals, axs.flat):
