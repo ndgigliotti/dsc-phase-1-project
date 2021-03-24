@@ -34,28 +34,33 @@ I use data from two sources in my analysis: [The Numbers](https://www.the-number
 ## Method
 I first create a genre contingency table which contains the `True` and `False` values for every genre relative to each movie. Then I partition the master movie table by budget quartile. Then, for each budget quartile, I compute the Pearson correlations between genre and worldwide ROI. Finally, I plot the correlation values on a heatmap.
 
-    
-![svg](images/genre_profitability_92_0.svg)
+<div align=center>
+<img src="images/genre_profitability_92_0.svg" alt="genre heatmap" width="350"/>
+</div>
     
 Afterwards, I create a scatter plot of budget vs. worldwide ROI to examine the relationship between budget and ROI independently of genre.
 ## Results
 ### Most Profitable Genres
 The following heatmap shows the correlations between genre and worldwide ROI for each budget quartile. Animation is the clear leader in the high-budget quartile, while horror dominates the low-budget quartile.
 
-![svg](images/genre_profitability_94_0.svg)
+<div align=center>
+<img src="images/genre_profitability_94_0.svg" alt="genre heatmap" height="500"/>
+</div>
 
 The correlation scores for the midrange quartiles are lower, but horror and thriller are still at the top of the mix for mid-low budget films. For mid-high budget films, musical and romance movies have the highest correlation.
 
 The following bar chart corroborates the finding that horror is positively correlated with ROI in the low-budget quantile. As it turns out, horror also leads in overall correlation with ROI.
 
-![svg](images/genre_profitability_87_1.svg)
-    
+<div align=center>
+<img src="images/genre_profitability_87_1.svg" alt="horror bar graph" height="450"/>
+</div>
 
 ### Budget and ROI
 I find that there is almost no correlation between budget and ROI, but ROI drops abruptly around $250M. This drop at the end makes sense, since having a high budget makes it difficult to achieve a decent ROI percentage. Note that the confidence interval goes wide at the end, indicating that in reality the dropoff might not be quite so abrupt.
-    
-![svg](images/genre_profitability_99_0.svg)
-    
+
+<div align=center>
+<img src="images/genre_profitability_99_0.svg" alt="budget scatterplot" width="450"/>
+</div>
 
 ## Conclusions
 
