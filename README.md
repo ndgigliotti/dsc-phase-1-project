@@ -33,10 +33,6 @@ I use data from two sources in my analysis: [The Numbers](https://www.the-number
 
 ## Method
 I first create a genre contingency table which contains the `True` and `False` values for every genre relative to each movie. Then I partition the master movie table by budget quartile. Then, for each budget quartile, I compute the Pearson correlations between genre and worldwide ROI. Finally, I plot the correlation values on a heatmap.
-
-<div align=center>
-<img src="images/genre_profitability_92_0.svg" alt="genre heatmap" width="350"/>
-</div>
     
 Afterwards, I create a scatter plot of budget vs. worldwide ROI to examine the relationship between budget and ROI independently of genre.
 ## Results
@@ -44,7 +40,7 @@ Afterwards, I create a scatter plot of budget vs. worldwide ROI to examine the r
 The following heatmap shows the correlations between genre and worldwide ROI for each budget quartile. Animation is the clear leader in the high-budget quartile, while horror dominates the low-budget quartile.
 
 <div align=center>
-<img src="images/genre_profitability_94_0.svg" alt="genre heatmap" height="500"/>
+<img src="images/genre_profitability_94_0.svg" alt="genre heatmap" height="600"/>
 </div>
 
 The correlation scores for the midrange quartiles are lower, but horror and thriller are still at the top of the mix for mid-low budget films. For mid-high budget films, musical and romance movies have the highest correlation.
