@@ -72,6 +72,14 @@ Drama, action, and crime consistently show up in the negative on correlation wit
 #### Keep your movie budgets under $250M.
 ROI has almost no correlation with budget, but seems to decline sharply after $250M. This is where risk suddenly overtakes reward.
 
+## Repository Organization
+
+- Notebook and modules are located at root level.
+- The presentation and other deliverables are located in [presentation](presentation "presentation").
+- Raw data is located in [zipped_data](zipped_data "zipped_data").
+- Clean data is located in [clean_data](clean_data "clean_data").
+- Figures and other images are located in [images](images "images").
+
 ## To Do
 
 - [ ] Write docstrings for cleaning.py
